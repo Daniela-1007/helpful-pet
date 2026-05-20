@@ -1,0 +1,99 @@
+<%- include('partials/header') %>
+
+<main class="container">
+  <h1 class="page-title">Your Cart 🛒</h1>
+
+  <div id="cart-empty" style="display:none;">
+    <p>Your cart is empty. <a href="/shop">Start shopping!</a></p>
+  </div>
+
+  <div id="cart-content" style="display:none;">
+    <div class="cart-grid">
+
+      <div id="cart-items-list" class="cart-items"></div>
+
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
+        <div class="summary-row"><span>Shipping</span><span id="summary-shipping">$0.00</span></div>
+        <div class="summary-row summary-total"><span>Total</span><span id="summary-total">$0.00</span></div>
+        <a href="/checkout" class="btn btn-primary">Proceed to Checkout</a>
+        <a href="/shop" class="btn btn-ghost">Continue Shopping</a>
+        <p class="cart-note">🎓 Demo project — no real payment needed.</p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const cart = getCart();
+  const cartContent = document.getElementById('cart-content');
+  const cartEmpty = document.getElementById('cart-empty');
+  const list = document.getElementById('cart-items-list');
+
+  if (cart.length === 0) {
+    cartEmpty.style.display = 'block';
+    return;
+  }
+
+  cartContent.style.display = 'block';
+  renderItems(cart, list);
+  renderSummary(cart);
+});
+
+function renderItems(cart, list) {
+  list.innerHTML = '';
+  cart.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <div class="cart-item-emoji">${item.emoji}</div>
+      <div class="cart-item-info">
+        <h4>${item.name}</h4>
+        <p>$${item.price.toFixed(2)} each</p>
+      </div>
+      <div class="cart-item-qty">
+        <button onclick="updateQty(${i}, -1)">−</button>
+        <span>${item.qty}</span>
+        <button onclick="updateQty(${i}, 1)">+</button>
+      </div>
+      <div class="cart-item-total">$${(item.price * item.qty).toFixed(2)}</div>
+      <button class="cart-remove" onclick="removeItem(${i})">✕</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function renderSummary(cart) {
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipping = subtotal >= 50 ? 0 : 5.99;
+  document.getElementById('summary-subtotal').textContent = '$' + subtotal.toFixed(2);
+  document.getElementById('summary-shipping').textContent = shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2);
+  document.getElementById('summary-total').textContent = '$' + (subtotal + shipping).toFixed(2);
+}
+
+function updateQty(index, delta) {
+  let cart = getCart();
+  cart[index].qty = Math.max(1, cart[index].qty + delta);
+  saveCart(cart);
+  updateCartCount();
+  renderItems(cart, document.getElementById('cart-items-list'));
+  renderSummary(cart);
+}
+
+function removeItem(index) {
+  let cart = getCart();
+  cart.splice(index, 1);
+  saveCart(cart);
+  updateCartCount();
+  if (cart.length === 0) location.reload();
+  else {
+    renderItems(cart, document.getElementById('cart-items-list'));
+    renderSummary(cart);
+  }
+}
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,56 @@
+<%- include('partials/header') %>
+
+<main class="container">
+  <h1 class="page-title">Shop All Products</h1>
+
+  <div class="shop-layout">
+
+    <!-- Filters Sidebar -->
+    <aside class="sidebar">
+      <h3>Filter by Pet</h3>
+      <div class="filter-group">
+        <a href="/shop" class="filter-btn <%= !query.pet ? 'active' : '' %>">All Pets</a>
+        <a href="/shop?pet=dog" class="filter-btn <%= query.pet === 'dog' ? 'active' : '' %>">🐶 Dogs</a>
+        <a href="/shop?pet=cat" class="filter-btn <%= query.pet === 'cat' ? 'active' : '' %>">🐱 Cats</a>
+      </div>
+
+      <h3>Filter by Category</h3>
+      <div class="filter-group">
+        <a href="/shop" class="filter-btn <%= !query.category ? 'active' : '' %>">All</a>
+        <% categories.forEach(cat => { %>
+          <a href="/shop?category=<%= cat %>" class="filter-btn <%= query.category === cat ? 'active' : '' %>">
+            <%= cat %>
+          </a>
+        <% }); %>
+      </div>
+    </aside>
+
+    <!-- Product Grid -->
+    <section class="product-grid">
+      <% if (products.length === 0) { %>
+        <p class="empty">No products found. <a href="/shop">Clear filters</a></p>
+      <% } else { %>
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <% if (product.badge) { %>
+              <span class="badge"><%= product.badge %></span>
+            <% } %>
+            <div class="product-emoji"><%= product.emoji %></div>
+            <div class="product-info">
+              <span class="product-category"><%= product.category %></span>
+              <h3><a href="/product/<%= product.id %>"><%= product.name %></a></h3>
+              <p><%= product.description.substring(0, 80) %>...</p>
+              <div class="product-footer">
+                <span class="price">$<%= product.price.toFixed(2) %></span>
+                <a href="/product/<%= product.id %>" class="btn btn-ghost btn-sm">View Product</a>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+    </section>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>

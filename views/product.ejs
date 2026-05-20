@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<main class="container">
+  <a href="/shop" class="back-link">← Back to Shop</a>
+
+  <div class="product-detail">
+    <div class="product-detail-img">
+      <div class="product-emoji-lg"><%= product.emoji %></div>
+    </div>
+    <div class="product-detail-info">
+      <span class="product-category"><%= product.category %></span>
+      <h1><%= product.name %></h1>
+      <p class="product-detail-desc"><%= product.description %></p>
+      <p class="product-detail-price">$<%= product.price.toFixed(2) %></p>
+      <div class="qty-row">
+        <button onclick="changeQty(-1)">−</button>
+        <span id="qty">1</span>
+        <button onclick="changeQty(1)">+</button>
+      </div>
+      <button class="btn btn-primary" onclick="addToCart(<%= product.id %>, '<%= product.name %>', <%= product.price %>)">
+        Add to Cart 🛒
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  function changeQty(delta) {
+    const el = document.getElementById('qty');
+    let val = parseInt(el.textContent) + delta;
+    if (val < 1) val = 1;
+    el.textContent = val;
+  }
+
+  function addToCart(id, name, price) {
+    const qty = parseInt(document.getElementById('qty').textContent);
+    for (let i = 0; i < qty; i++) {
+      addToCartItem(id, name, price, '<%= product.emoji %>');
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

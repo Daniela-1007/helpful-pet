@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+
+<main class="container">
+  <div class="confirmation-card">
+    <div class="confirm-icon">🎉</div>
+    <h1>Order Confirmed!</h1>
+    <p>Thank you for your demo order at <strong>HelpfulPet</strong>.</p>
+    <p>Your furry friend is going to love their new travel gear!</p>
+
+    <div class="confirm-details">
+      <div class="confirm-row">
+        <span>Order #</span>
+        <strong>HP-<%= Math.floor(Math.random() * 90000) + 10000 %></strong>
+      </div>
+      <div class="confirm-row">
+        <span>Estimated Delivery</span>
+        <strong>3–5 Business Days</strong>
+      </div>
+      <div class="confirm-row">
+        <span>Status</span>
+        <strong class="status-green">✓ Processing</strong>
+      </div>
+    </div>
+
+    <p class="cart-note">🎓 This is a school project. No real order was placed.</p>
+
+    <div class="confirm-actions">
+      <a href="/shop" class="btn btn-primary">Continue Shopping</a>
+      <a href="/" class="btn btn-ghost">Back to Home</a>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Clear the cart when order is confirmed
+  localStorage.removeItem('helpfulpet_cart');
+  updateCartCount();
+</script>
+
+<%- include('partials/footer') %>
